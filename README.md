@@ -5,7 +5,7 @@ This is a Python backend and React frontend rewrite of https://bitbucket.org/mag
 This tool helps contributors track Recent Changes to entities using SPARQL 
 
 ## Backend
-See https://github.com/dpriskorn/sparql-rc2-backend
+See https://sparql-rc2-backend.toolforge.org/ and https://github.com/dpriskorn/sparql-rc2-backend
 
 ## License
 GPLv3+
