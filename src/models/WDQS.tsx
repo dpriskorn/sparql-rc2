@@ -45,9 +45,16 @@ export default class WDQS {
    */
   async getEntityIds(query: string): Promise<string[]> {
     const bindings = await this.runQuery(query);
-    return bindings.map((row) => {
-      const uri = row.entity.value;
-      return uri.replace("http://www.wikidata.org/entity/", "");
-    });
+    if (bindings.length === 0) return [];
+
+    for (const row of bindings) {
+      if (!row.entity) {
+        throw new Error("SPARQL results are missing ?entity variable in a binding");
+      }
+    }
+
+    return bindings.map((row) =>
+      row.entity.value.replace("http://www.wikidata.org/entity/", "")
+    );
   }
 }

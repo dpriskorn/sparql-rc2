@@ -2,16 +2,16 @@ import { useState } from "react";
 import QueryInputForm, { type QueryFormValues } from "./QueryInputForm";
 import ResultsTable, { type Revisions } from "./ResultsTable";
 import WDQS from "./WDQS";
+import { useFetchRevisions } from "./useFetchRevisions";
 
 export default function RevisionsTool() {
-  const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<Revisions[]>([]);
-  const [error, setError] = useState("");
-  const [entityCount, setEntityCount] = useState<number | null>(null); // NEW
+  const [entityCount, setEntityCount] = useState<number | null>(null);
+
+  const { fetchRevisions, loading, error, setError } = useFetchRevisions();
 
   const handleQuerySubmit = async (values: QueryFormValues) => {
-    setLoading(true);
-    setError("");
+    setError(null);
     setResults([]);
     setEntityCount(null);
 
@@ -35,26 +35,18 @@ export default function RevisionsTool() {
         );
       }
 
-      setEntityCount(entityList.length); // track entities count
+      setEntityCount(entityList.length);
 
-      const params = new URLSearchParams();
-      params.append("entities", entityList.join(","));
-      if (values.startDate.trim())
-        params.append("start_date", values.startDate);
-      if (values.endDate.trim()) params.append("end_date", values.endDate);
-      params.append("no_bots", values.noBots ? "true" : "false");
-      params.append("only_unpatrolled", values.unpatrolledOnly ? "true" : "false");
-
-      const res = await fetch(
-        `https://sparql-rc2-backend.toolforge.org/api/v2/revisions?${params.toString()}`
+      const revisions = await fetchRevisions(
+        entityList,
+        values.startDate,
+        values.endDate,
+        values.noBots,
+        values.unpatrolledOnly
       );
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-      const data = await res.json();
-      setResults(data);
+      setResults(revisions);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -73,8 +65,7 @@ export default function RevisionsTool() {
         <p className="mt-3">
           Found <strong>{entityCount ?? "?"}</strong> item
           {entityCount === 1 ? "" : "s"} and <strong>{results.length}</strong>{" "}
-          revision
-          {results.length === 1 ? "" : "s"}
+          revision{results.length === 1 ? "" : "s"}
         </p>
       )}
 
