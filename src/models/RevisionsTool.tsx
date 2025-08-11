@@ -43,7 +43,7 @@ export default function RevisionsTool() {
         params.append("start_date", values.startDate);
       if (values.endDate.trim()) params.append("end_date", values.endDate);
       params.append("no_bots", values.noBots ? "true" : "false");
-      params.append("only_unpatrolled", "false");
+      params.append("only_unpatrolled", values.unpatrolledOnly ? "true" : "false");
 
       const res = await fetch(
         `https://sparql-rc2-backend.toolforge.org/api/v2/revisions?${params.toString()}`

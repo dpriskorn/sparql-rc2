@@ -6,6 +6,7 @@ export interface QueryFormValues {
   startDate: string;
   endDate: string;
   noBots: boolean;
+  unpatrolledOnly: boolean;
 }
 
 interface Props {
@@ -19,10 +20,11 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [noBots, setNoBots] = useState(false);
+  const [unpatrolledOnly, setUnpatrolledOnly] = useState(false); // new state
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ sparqlQuery, items, startDate, endDate, noBots });
+    onSubmit({ sparqlQuery, items, startDate, endDate, noBots, unpatrolledOnly });
   };
 
   return (
@@ -81,6 +83,20 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
         />
         <label className="form-check-label" htmlFor="noBots">
           No bot edits
+        </label>
+      </div>
+
+      {/* New checkbox for unpatrolled only */}
+      <div className="mb-3 form-check">
+        <input
+          type="checkbox"
+          className="form-check-input"
+          id="unpatrolledOnly"
+          checked={unpatrolledOnly}
+          onChange={(e) => setUnpatrolledOnly(e.target.checked)}
+        />
+        <label className="form-check-label" htmlFor="unpatrolledOnly">
+          Unpatrolled only
         </label>
       </div>
 
