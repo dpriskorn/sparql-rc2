@@ -54,8 +54,7 @@ export default function RevisionsTool() {
   return (
     <div className="container mt-4">
       <h2>
-        Get diffs for all items matching a SPARQL query, or a list, for a date
-        range
+        Find recently changed entities and validate them against an EntitySchema
       </h2>
 
       <QueryInputForm onSubmit={handleQuerySubmit} loading={loading} />
