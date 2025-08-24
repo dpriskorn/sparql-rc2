@@ -48,7 +48,7 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
           rows={4}
           value={sparqlQuery}
           onChange={(e) => setSparqlQuery(e.target.value)}
-          placeholder="SELECT ?entity WHERE { ?entity wdt:P31 wd:Q5 } LIMIT 10"
+          placeholder="SELECT DISTINCT ?entity WHERE { ?entity wdt:P31 wd:Q5 } LIMIT 10"
         />
       </div>
 
