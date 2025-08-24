@@ -1,9 +1,10 @@
 import { useState } from "react";
-import QueryInputForm, { type QueryFormValues } from "./QueryInputForm";
-import ResultsTable, { type Revisions } from "./ResultsTable";
-import WDQS from "./WDQS";
-import { useFetchRevisions } from "./useFetchRevisions";
-
+import type { Revisions } from "../components/ResultsTable";
+import { useFetchRevisions } from "../components/useFetchRevisions";
+import type { QueryFormValues } from "../components/QueryInputForm";
+import WDQS from "../components/WDQS";
+import QueryInputForm from "../components/QueryInputForm";
+import ResultsTable from "../components/ResultsTable";
 export default function RevisionsTool() {
   const [results, setResults] = useState<Revisions[]>([]);
   const [entityCount, setEntityCount] = useState<number | null>(null);
@@ -24,11 +25,6 @@ export default function RevisionsTool() {
         if (entityList.length === 0) {
           throw new Error("SPARQL query returned no entities");
         }
-      } else if (values.items.trim()) {
-        entityList = values.items
-          .split(",")
-          .map((i) => i.trim())
-          .filter(Boolean);
       } else {
         throw new Error(
           "Please enter either a SPARQL query or a list of items"
@@ -42,7 +38,8 @@ export default function RevisionsTool() {
         values.startDate,
         values.endDate,
         values.noBots,
-        values.unpatrolledOnly
+        values.unpatrolledOnly,
+        values.excludeUsers
       );
       setResults(revisions);
     } catch (err: unknown) {

@@ -2,11 +2,12 @@ import React, { useState } from "react";
 
 export interface QueryFormValues {
   sparqlQuery: string;
-  items: string;
+  entitySchemaId: string;
   startDate: string;
   endDate: string;
   noBots: boolean;
   unpatrolledOnly: boolean;
+  excludeUsers: string;
 }
 
 interface Props {
@@ -16,15 +17,24 @@ interface Props {
 
 export default function QueryInputForm({ onSubmit, loading }: Props) {
   const [sparqlQuery, setSparqlQuery] = useState("");
-  const [items, setItems] = useState("");
+  const [entitySchemaId, setEntitySchemaId] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [noBots, setNoBots] = useState(false);
-  const [unpatrolledOnly, setUnpatrolledOnly] = useState(false); // new state
+  const [unpatrolledOnly, setUnpatrolledOnly] = useState(false);
+  const [excludeUsers, setExcludeUsers] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ sparqlQuery, items, startDate, endDate, noBots, unpatrolledOnly });
+    onSubmit({
+      sparqlQuery,
+      entitySchemaId,
+      startDate,
+      endDate,
+      excludeUsers,
+      noBots,
+      unpatrolledOnly,
+    });
   };
 
   return (
@@ -41,13 +51,13 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Items (comma-separated)</label>
+        <label className="form-label">EntitySchema ID</label>
         <input
           type="text"
           className="form-control"
-          value={items}
-          onChange={(e) => setItems(e.target.value)}
-          placeholder="Q42, Q937"
+          value={entitySchemaId}
+          onChange={(e) => setEntitySchemaId(e.target.value)}
+          placeholder="E123"
         />
       </div>
 
@@ -73,6 +83,19 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
         />
       </div>
 
+      <div className="mb-3">
+        <label className="form-label">
+          Exclude users (comma-separated usernames)
+        </label>
+        <input
+          type="text"
+          className="form-control"
+          value={excludeUsers}
+          onChange={(e) => setExcludeUsers(e.target.value)}
+          placeholder="User1, User2, User3"
+        />
+      </div>
+
       <div className="mb-3 form-check">
         <input
           type="checkbox"
@@ -86,7 +109,6 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
         </label>
       </div>
 
-      {/* New checkbox for unpatrolled only */}
       <div className="mb-3 form-check">
         <input
           type="checkbox"

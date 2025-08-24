@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import RevisionsTool from "./models/RevisionsTool";
+import RevisionsTool from "./pages/RevisionsTool";
 
 function App() {
   return <RevisionsTool />;

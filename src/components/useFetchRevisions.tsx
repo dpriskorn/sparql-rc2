@@ -16,7 +16,8 @@ export function useFetchRevisions() {
     startDate: string,
     endDate: string,
     noBots: boolean,
-    unpatrolledOnly: boolean
+    unpatrolledOnly: boolean,
+    excludeUsers: string // <-- new param
   ): Promise<Revisions[]> {
     setLoading(true);
     setError(null);
@@ -40,9 +41,10 @@ export function useFetchRevisions() {
         if (endDate.trim()) params.append("end_date", endDate);
         params.append("no_bots", noBots ? "true" : "false");
         params.append("only_unpatrolled", unpatrolledOnly ? "true" : "false");
+        if (excludeUsers.trim()) params.append("exclude_users", excludeUsers); // <-- added
 
         const res = await fetch(
-          `https://sparql-rc2-backend.toolforge.org/api/v2/revisions?${params.toString()}`
+          `https://sparql-rc2-backend.toolforge.org/api/v1/revisions?${params.toString()}`
         );
 
         if (!res.ok) {

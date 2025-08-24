@@ -1,6 +1,6 @@
 import axios from "axios";
 const USER_AGENT =
-  "https://github.com/dpriskorn/topic-curator-frontend/ by User:So9q";
+  "https://github.com/dpriskorn/sparql-rc2-frontend/ by User:So9q";
 
 export const WIKIBASE_REST_API =
   "https://www.wikidata.org/w/rest.php/wikibase/v1";

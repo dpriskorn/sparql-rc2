@@ -9,7 +9,7 @@ type Revision = {
   rev_id: number;
   rev_page: number;
   rev_user: number;
-  rev_user_text: string;
+  rev_user_text: string; // username
   rev_timestamp: string;
   rc_patrolled: number;
 };
@@ -36,7 +36,7 @@ export default function ResultsTable({ results }: Props) {
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Page ID</th>
+            <th>Entity ID</th> {/* Changed header */}
             <th>Earliest rev</th>
             <th>Latest rev</th>
             <th>Users</th>
@@ -45,7 +45,15 @@ export default function ResultsTable({ results }: Props) {
         <tbody>
           {results.map((rev) => (
             <tr key={rev.page_id}>
-              <td>{rev.page_id}</td>
+              <td>
+                <a
+                  href={`https://www.wikidata.org/entity/${rev.entity_id}`}
+                  target="_blank"
+                  // rel="noopener noreferrer"
+                >
+                  {rev.entity_id}
+                </a>
+              </td>
               <td>{rev.earliest.rev_timestamp}</td>
               <td>{rev.latest.rev_timestamp}</td>
               <td>
