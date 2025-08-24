@@ -40,7 +40,9 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
   return (
     <form onSubmit={handleSubmit} className="mt-3">
       <div className="mb-3">
-        <label className="form-label">SPARQL query (must return ?entity, ?item or ?lexeme)</label>
+        <label className="form-label">
+          SPARQL query (must return ?entity, ?item or ?lexeme)
+        </label>
         <textarea
           className="form-control"
           rows={4}
@@ -50,19 +52,18 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
         />
       </div>
 
-      <div className="mb-3">
-        <label className="form-label">EntitySchema ID</label>
-        <input
-          type="text"
-          className="form-control"
-          value={entitySchemaId}
-          onChange={(e) => setEntitySchemaId(e.target.value)}
-          placeholder="E123"
-        />
-      </div>
-
       <div className="mb-3 row">
-        <div className="col">
+        <div className="col-md">
+          <label className="form-label">EntitySchema ID</label>
+          <input
+            type="text"
+            className="form-control"
+            value={entitySchemaId}
+            onChange={(e) => setEntitySchemaId(e.target.value)}
+            placeholder="E123"
+          />
+        </div>
+        <div className="col-md">
           <label className="form-label">Start date (YYYYMMDD)</label>
           <input
             type="text"
@@ -76,7 +77,7 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
           </small>
         </div>
 
-        <div className="col">
+        <div className="col-md">
           <label className="form-label">End date (YYYYMMDD)</label>
           <input
             type="text"
@@ -92,42 +93,46 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">
-          Exclude users (comma-separated usernames)
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          value={excludeUsers}
-          onChange={(e) => setExcludeUsers(e.target.value)}
-          placeholder="User1, User2, User3"
-        />
+          <label className="form-label">
+            Exclude users
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            value={excludeUsers}
+            onChange={(e) => setExcludeUsers(e.target.value)}
+            placeholder="User1, User2, User3"
+          />
       </div>
+        
+      <div className="mb-3 row">
+        <div className="col">
+          <div className="col form-check">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="noBots"
+              checked={noBots}
+              onChange={(e) => setNoBots(e.target.checked)}
+            />
+            <label className="form-check-label" htmlFor="noBots">
+              Exclude bot edits
+            </label>
+          </div>
 
-      <div className="mb-3 form-check">
-        <input
-          type="checkbox"
-          className="form-check-input"
-          id="noBots"
-          checked={noBots}
-          onChange={(e) => setNoBots(e.target.checked)}
-        />
-        <label className="form-check-label" htmlFor="noBots">
-          No bot edits
-        </label>
-      </div>
-
-      <div className="mb-3 form-check">
-        <input
-          type="checkbox"
-          className="form-check-input"
-          id="unpatrolledOnly"
-          checked={unpatrolledOnly}
-          onChange={(e) => setUnpatrolledOnly(e.target.checked)}
-        />
-        <label className="form-check-label" htmlFor="unpatrolledOnly">
-          Unpatrolled only
-        </label>
+          <div className="col form-check">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="unpatrolledOnly"
+              checked={unpatrolledOnly}
+              onChange={(e) => setUnpatrolledOnly(e.target.checked)}
+            />
+            <label className="form-check-label" htmlFor="unpatrolledOnly">
+              Unpatrolled only
+            </label>
+          </div>
+        </div>
       </div>
 
       <button type="submit" className="btn btn-primary" disabled={loading}>
