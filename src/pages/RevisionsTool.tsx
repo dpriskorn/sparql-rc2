@@ -5,9 +5,12 @@ import type { QueryFormValues } from "../components/QueryInputForm";
 import WDQS from "../components/WDQS";
 import QueryInputForm from "../components/QueryInputForm";
 import ResultsTable from "../components/ResultsTable";
+import EntityValidator from "../components/EntityValidator";
+
 export default function RevisionsTool() {
   const [results, setResults] = useState<Revisions[]>([]);
   const [entityCount, setEntityCount] = useState<number | null>(null);
+  const [entitySchemaId, setEntitySchemaId] = useState<string>("");
 
   const { fetchRevisions, loading, error, setError } = useFetchRevisions();
 
@@ -32,6 +35,7 @@ export default function RevisionsTool() {
       }
 
       setEntityCount(entityList.length);
+      setEntitySchemaId(values.entitySchemaId); // keep schema ID in state
 
       const revisions = await fetchRevisions(
         entityList,
@@ -67,6 +71,13 @@ export default function RevisionsTool() {
       )}
 
       <ResultsTable results={results} />
+
+      {results.length > 0 && entitySchemaId && (
+        <EntityValidator
+          entityIds={results.map((r) => r.entity_id)}
+          entitySchemaId={entitySchemaId}
+        />
+      )}
     </div>
   );
 }
