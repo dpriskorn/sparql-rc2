@@ -40,7 +40,7 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
   return (
     <form onSubmit={handleSubmit} className="mt-3">
       <div className="mb-3">
-        <label className="form-label">SPARQL query (must return ?entity)</label>
+        <label className="form-label">SPARQL query (must return ?entity, ?item or ?lexeme)</label>
         <textarea
           className="form-control"
           rows={4}
@@ -61,26 +61,34 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
         />
       </div>
 
-      <div className="mb-3">
-        <label className="form-label">Start date (YYYYMMDD)</label>
-        <input
-          type="text"
-          className="form-control"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          placeholder="20240101"
-        />
-      </div>
+      <div className="mb-3 row">
+        <div className="col">
+          <label className="form-label">Start date (YYYYMMDD)</label>
+          <input
+            type="text"
+            className="form-control"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            placeholder="20240101"
+          />
+          <small className="form-text text-muted">
+            Defaults to a week ago if left empty.
+          </small>
+        </div>
 
-      <div className="mb-3">
-        <label className="form-label">End date (YYYYMMDD)</label>
-        <input
-          type="text"
-          className="form-control"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          placeholder="20240201"
-        />
+        <div className="col">
+          <label className="form-label">End date (YYYYMMDD)</label>
+          <input
+            type="text"
+            className="form-control"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            placeholder="20240201"
+          />
+          <small className="form-text text-muted">
+            Defaults to now if left empty.
+          </small>
+        </div>
       </div>
 
       <div className="mb-3">
