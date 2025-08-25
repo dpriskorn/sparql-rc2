@@ -13,16 +13,25 @@ export interface QueryFormValues {
 interface Props {
   onSubmit: (values: QueryFormValues) => void;
   loading: boolean;
+  initialValues: QueryFormValues;
 }
 
-export default function QueryInputForm({ onSubmit, loading }: Props) {
-  const [sparqlQuery, setSparqlQuery] = useState("");
-  const [entitySchemaId, setEntitySchemaId] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [noBots, setNoBots] = useState(false);
-  const [unpatrolledOnly, setUnpatrolledOnly] = useState(false);
-  const [excludeUsers, setExcludeUsers] = useState("");
+export default function QueryInputForm({
+  onSubmit,
+  loading,
+  initialValues,
+}: Props) {
+  const [sparqlQuery, setSparqlQuery] = useState(initialValues.sparqlQuery);
+  const [entitySchemaId, setEntitySchemaId] = useState(
+    initialValues.entitySchemaId
+  );
+  const [startDate, setStartDate] = useState(initialValues.startDate);
+  const [endDate, setEndDate] = useState(initialValues.endDate);
+  const [noBots, setNoBots] = useState(initialValues.noBots);
+  const [unpatrolledOnly, setUnpatrolledOnly] = useState(
+    initialValues.unpatrolledOnly
+  );
+  const [excludeUsers, setExcludeUsers] = useState(initialValues.excludeUsers);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,18 +102,16 @@ export default function QueryInputForm({ onSubmit, loading }: Props) {
       </div>
 
       <div className="mb-3">
-          <label className="form-label">
-            Exclude users
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            value={excludeUsers}
-            onChange={(e) => setExcludeUsers(e.target.value)}
-            placeholder="User1, User2, User3"
-          />
+        <label className="form-label">Exclude users</label>
+        <input
+          type="text"
+          className="form-control"
+          value={excludeUsers}
+          onChange={(e) => setExcludeUsers(e.target.value)}
+          placeholder="User1, User2, User3"
+        />
       </div>
-        
+
       <div className="mb-3 row">
         <div className="col">
           <div className="col form-check">
