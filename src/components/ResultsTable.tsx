@@ -32,7 +32,7 @@ export default function ResultsTable({ results }: Props) {
 
   return (
     <div className="mt-4">
-      <h4>Results</h4>
+      <h4>Recent changes</h4>
       <table className="table table-striped">
         <thead>
           <tr>
