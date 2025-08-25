@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import QueryInputFields from "./QueryInputFields";
 
 export interface QueryFormValues {
   sparqlQuery: string;
@@ -21,127 +22,53 @@ export default function QueryInputForm({
   loading,
   initialValues,
 }: Props) {
-  const [sparqlQuery, setSparqlQuery] = useState(initialValues.sparqlQuery);
-  const [entitySchemaId, setEntitySchemaId] = useState(
-    initialValues.entitySchemaId
-  );
-  const [startDate, setStartDate] = useState(initialValues.startDate);
-  const [endDate, setEndDate] = useState(initialValues.endDate);
-  const [noBots, setNoBots] = useState(initialValues.noBots);
-  const [unpatrolledOnly, setUnpatrolledOnly] = useState(
-    initialValues.unpatrolledOnly
-  );
-  const [excludeUsers, setExcludeUsers] = useState(initialValues.excludeUsers);
+  const [values, setValues] = useState<QueryFormValues>(initialValues);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleChange = (
+    field: keyof QueryFormValues,
+    value: string | boolean
+  ) => {
+    setValues((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!values.sparqlQuery.trim()) {
+      newErrors.sparqlQuery = "SPARQL query is required.";
+    } else if (!/\?(entity|item|lexeme)/i.test(values.sparqlQuery)) {
+      newErrors.sparqlQuery = "Query must return ?entity, ?item or ?lexeme.";
+    }
+
+    if (!values.entitySchemaId.trim()) {
+      newErrors.entitySchemaId = "EntitySchema ID is required.";
+    }
+
+    const dateRegex = /^\d{8}$/;
+    if (values.startDate && !dateRegex.test(values.startDate)) {
+      newErrors.startDate = "Start date must be in YYYYMMDD format.";
+    }
+    if (values.endDate && !dateRegex.test(values.endDate)) {
+      newErrors.endDate = "End date must be in YYYYMMDD format.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      sparqlQuery,
-      entitySchemaId,
-      startDate,
-      endDate,
-      excludeUsers,
-      noBots,
-      unpatrolledOnly,
-    });
+    if (validate()) onSubmit(values);
   };
 
   return (
     <form onSubmit={handleSubmit} className="mt-3">
-      <div className="mb-3">
-        <label className="form-label">
-          SPARQL query (must return ?entity, ?item or ?lexeme)
-        </label>
-        <textarea
-          className="form-control"
-          rows={4}
-          value={sparqlQuery}
-          onChange={(e) => setSparqlQuery(e.target.value)}
-          placeholder="SELECT DISTINCT ?entity WHERE { ?entity wdt:P31 wd:Q5 } LIMIT 10"
-        />
-      </div>
-
-      <div className="mb-3 row">
-        <div className="col-md">
-          <label className="form-label">EntitySchema ID</label>
-          <input
-            type="text"
-            className="form-control"
-            value={entitySchemaId}
-            onChange={(e) => setEntitySchemaId(e.target.value)}
-            placeholder="E123"
-          />
-        </div>
-        <div className="col-md">
-          <label className="form-label">Start date (YYYYMMDD)</label>
-          <input
-            type="text"
-            className="form-control"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            placeholder="20240101"
-          />
-          <small className="form-text text-muted">
-            Defaults to a week ago if left empty.
-          </small>
-        </div>
-
-        <div className="col-md">
-          <label className="form-label">End date (YYYYMMDD)</label>
-          <input
-            type="text"
-            className="form-control"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            placeholder="20240201"
-          />
-          <small className="form-text text-muted">
-            Defaults to now if left empty.
-          </small>
-        </div>
-      </div>
-
-      <div className="mb-3">
-        <label className="form-label">Exclude users</label>
-        <input
-          type="text"
-          className="form-control"
-          value={excludeUsers}
-          onChange={(e) => setExcludeUsers(e.target.value)}
-          placeholder="User1, User2, User3"
-        />
-      </div>
-
-      <div className="mb-3 row">
-        <div className="col">
-          <div className="col form-check">
-            <input
-              type="checkbox"
-              className="form-check-input"
-              id="noBots"
-              checked={noBots}
-              onChange={(e) => setNoBots(e.target.checked)}
-            />
-            <label className="form-check-label" htmlFor="noBots">
-              Exclude bot edits
-            </label>
-          </div>
-
-          <div className="col form-check">
-            <input
-              type="checkbox"
-              className="form-check-input"
-              id="unpatrolledOnly"
-              checked={unpatrolledOnly}
-              onChange={(e) => setUnpatrolledOnly(e.target.checked)}
-            />
-            <label className="form-check-label" htmlFor="unpatrolledOnly">
-              Unpatrolled only
-            </label>
-          </div>
-        </div>
-      </div>
-
+      <QueryInputFields
+        values={values}
+        errors={errors}
+        onChange={handleChange}
+      />
       <button type="submit" className="btn btn-primary" disabled={loading}>
         {loading ? "Loading..." : "Fetch recent changes"}
       </button>
