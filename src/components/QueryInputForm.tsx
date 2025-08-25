@@ -143,7 +143,7 @@ export default function QueryInputForm({
       </div>
 
       <button type="submit" className="btn btn-primary" disabled={loading}>
-        {loading ? "Loading..." : "Get Recent Changes"}
+        {loading ? "Loading..." : "Fetch recent changes"}
       </button>
     </form>
   );
