@@ -136,8 +136,8 @@ export default function RevisionsTool() {
 
         <ResultsTable results={results} />
 
-        {/* Copy URL buttons */}
-        <ResultsCopyLinks values={formValues} />
+        {/* Show URL buttons only when it makes sense */}
+        {entityCount && entityCount > 0 && <ResultsCopyLinks values={formValues} />}
 
         {/* Entity Validator */}
         {results.length > 0 && entitySchemaId && (
