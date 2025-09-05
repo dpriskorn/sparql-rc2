@@ -10,6 +10,7 @@ import NavbarComponent from "../layout/Navbar";
 import ResultsCopyLinks from "../components/revisions/ResultLinks";
 import { decodeBase64, encodeBase64 } from "../utils/base64";
 import NoticeLink from "../components/revisions/NoticeLink";
+import Footer from "../layout/Footer";
 
 export default function RevisionsTool() {
   const [results, setResults] = useState<Revisions[]>([]);
@@ -122,6 +123,7 @@ export default function RevisionsTool() {
           <ResultsCopyLinks values={formValues} />
         )}
       </div>
+      <Footer />
     </>
   );
 }

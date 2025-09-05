@@ -12,6 +12,7 @@ import NavbarComponent from "../layout/Navbar";
 import ResultsCopyLinks from "../components/revisions/ResultLinks";
 import { decodeBase64, encodeBase64 } from "../utils/base64";
 import ValidateLink from "../components/validation/ValidateLink";
+import Footer from "../layout/Footer";
 
 export default function Validate() {
   const [results, setResults] = useState<Revisions[]>([]);
@@ -147,6 +148,7 @@ export default function Validate() {
         )}
         {entityCount && entityCount > 0 && <ValidateLink values={formValues} />}
       </div>
+      <Footer />
     </>
   );
 }
