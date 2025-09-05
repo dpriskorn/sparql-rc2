@@ -33,7 +33,6 @@ function ResultsCopyLinks({ values }: { values: QueryFormValues }) {
   // Different variants
   const urlQuerySettings = `${baseUrl}?${baseParams.toString()}`;
   const urlFetch = `${baseUrl}?${baseParams.toString()}&fetch=true`;
-  const urlFetchValidate = `${baseUrl}?${baseParams.toString()}&fetch=true&validate=true`;
 
   const handleCopy = async (label: string, url: string) => {
     await navigator.clipboard.writeText(url);
@@ -60,17 +59,6 @@ function ResultsCopyLinks({ values }: { values: QueryFormValues }) {
           {copied === "Query + Settings + Fetch"
             ? "✅ Copied!"
             : "Copy Query + Settings + Fetch"}
-        </button>
-
-        <button
-          className="btn btn-outline-danger"
-          onClick={() =>
-            handleCopy("Query + Settings + Fetch + Validate", urlFetchValidate)
-          }
-        >
-          {copied === "Query + Settings + Fetch + Validate"
-            ? "✅ Copied!"
-            : "Copy Query + Settings + Fetch + Validate"}
         </button>
       </div>
     </div>

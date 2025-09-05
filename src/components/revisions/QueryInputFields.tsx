@@ -1,5 +1,6 @@
 import type { QueryFormValues } from "./QueryInputForm";
 
+
 interface Props {
   values: QueryFormValues;
   errors: Record<string, string>;
@@ -26,22 +27,6 @@ export default function QueryInputFields({ values, errors, onChange }: Props) {
       </div>
 
       <div className="mb-3 row">
-        <div className="col-md">
-          <label className="form-label">EntitySchema ID</label>
-          <input
-            type="text"
-            className={`form-control ${
-              errors.entitySchemaId ? "is-invalid" : ""
-            }`}
-            value={values.entitySchemaId}
-            onChange={(e) => onChange("entitySchemaId", e.target.value)}
-            placeholder="E123"
-          />
-          {errors.entitySchemaId && (
-            <div className="invalid-feedback">{errors.entitySchemaId}</div>
-          )}
-        </div>
-
         <div className="col-md">
           <label className="form-label">Start date (YYYYMMDD)</label>
           <input

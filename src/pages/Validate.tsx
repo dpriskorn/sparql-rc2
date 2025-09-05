@@ -1,16 +1,19 @@
+// ./src/pages/Validate.tsx
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Revisions } from "../components/revisions/ResultsTable";
 import { useFetchRevisions } from "../components/revisions/useFetchRevisions";
-import type { QueryFormValues } from "../components/revisions/QueryInputForm";
+import type { QueryFormValues } from "../components/validation/QueryInputForm";
 import WDQS from "../models/WDQS";
-import QueryInputForm from "../components/revisions/QueryInputForm";
+import QueryInputForm from "../components/validation/QueryInputForm";
 import ResultsTable from "../components/revisions/ResultsTable";
+import EntityValidator from "../components/validation/EntityValidator";
 import NavbarComponent from "../layout/Navbar";
 import ResultsCopyLinks from "../components/revisions/ResultLinks";
 import { decodeBase64, encodeBase64 } from "../utils/base64";
+import ValidateLink from "../components/validation/ValidateLink";
 
-export default function RevisionsTool() {
+export default function Validate() {
   const [results, setResults] = useState<Revisions[]>([]);
   const [entityCount, setEntityCount] = useState<number | null>(null);
 
@@ -21,7 +24,7 @@ export default function RevisionsTool() {
     sparqlQuery: searchParams.get("sparql")
       ? decodeBase64(searchParams.get("sparql") as string)
       : "",
-    entitySchemaId: searchParams.get("schema") ?? "",
+    entitySchemaId: searchParams.get("schema") ?? "", // Eid mandatory
     startDate: searchParams.get("start") ?? "",
     endDate: searchParams.get("end") ?? "",
     noBots: searchParams.get("noBots") === "true",
@@ -30,10 +33,17 @@ export default function RevisionsTool() {
   };
 
   const fetchParam = searchParams.get("fetch") === "true";
+  const validateParam = searchParams.get("validate") === "true";
 
   const [formValues, setFormValues] = useState<QueryFormValues>(initialValues);
 
   const handleQuerySubmit = async (values: QueryFormValues) => {
+    // enforce Eid required
+    if (!values.entitySchemaId.trim()) {
+      setError("EntitySchema ID is required for validation");
+      return;
+    }
+
     setFormValues(values);
 
     const sparqlEncoded = encodeBase64(values.sparqlQuery);
@@ -47,6 +57,7 @@ export default function RevisionsTool() {
       exclude: values.excludeUsers,
     };
     if (fetchParam) newParams.fetch = "true";
+    if (validateParam) newParams.validate = "true";
 
     setSearchParams(newParams);
 
@@ -81,13 +92,18 @@ export default function RevisionsTool() {
     }
   };
 
-  // Auto-fetch if fetch=true
   useEffect(() => {
-    if (fetchParam && initialValues.sparqlQuery) {
+    if (
+      fetchParam &&
+      initialValues.sparqlQuery &&
+      initialValues.entitySchemaId
+    ) {
       handleQuerySubmit(initialValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchParam]);
+
+  const entityIds = results.map((r) => r.entity_id);
 
   return (
     <>
@@ -95,7 +111,8 @@ export default function RevisionsTool() {
       <div className="container mt-4">
         <p>
           <b>
-            Find recently changed entities
+            Find recently changed entities and validate them against an
+            EntitySchema
           </b>
         </p>
 
@@ -117,10 +134,18 @@ export default function RevisionsTool() {
 
         <ResultsTable results={results} />
 
-        {/* Show copy links only if we have fetched results */}
         {entityCount && entityCount > 0 && (
           <ResultsCopyLinks values={formValues} />
         )}
+
+        {entityIds.length > 0 && (
+          <EntityValidator
+            entityIds={entityIds}
+            entitySchemaId={formValues.entitySchemaId}
+            autoValidate={validateParam}
+          />
+        )}
+        {entityCount && entityCount > 0 && <ValidateLink values={formValues} />}
       </div>
     </>
   );

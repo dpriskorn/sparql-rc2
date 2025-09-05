@@ -15,7 +15,7 @@ interface ValidationResult {
 
 interface Props {
   entityIds: string[];
-  entitySchemaId: string;
+  entitySchemaId: string; // always controlled
   autoValidate?: boolean;
 }
 
@@ -28,49 +28,65 @@ export default function EntityValidator({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-const validateEntities = useCallback(async () => {
-  if (!entitySchemaId) {
-    setError("EntitySchema ID is required");
-    return;
-  }
-  if (entityIds.length === 0) {
-    setError("No entities to validate");
-    return;
-  }
-
-  try {
-    setLoading(true);
-    setError(null);
-
-    const chunks: string[][] = [];
-    for (let i = 0; i < entityIds.length; i += 100) {
-      chunks.push(entityIds.slice(i, i + 100));
+  const validateEntities = useCallback(async () => {
+    if (!entitySchemaId) {
+      setError("EntitySchema ID is required");
+      return;
     }
 
-    const allResults: ValidationResult[] = [];
-    for (const chunk of chunks) {
-      const ids = chunk.join(",");
-      const url = `https://entityvalidator-backend.toolforge.org/api/v1/validate?eid=${entitySchemaId}&entity_ids=${ids}`;
-      const response = await axios.get(url);
-      allResults.push(...response.data.results);
+    if (!/^E\d+$/.test(entitySchemaId)) {
+      setError(
+        'Invalid EntitySchema ID. Must be "E" followed by numbers, e.g., E123'
+      );
+      return;
     }
 
-    setResults(allResults);
-  } catch (err: unknown) {
-    if (axios.isAxiosError(err)) {
-      setError(err.message);
-    } else if (err instanceof Error) {
-      setError(err.message);
-    } else {
-      setError("Validation failed");
+    if (entityIds.length === 0) {
+      setError("No entities to validate");
+      return;
     }
-  } finally {
-    setLoading(false);
-  }
-}, [entityIds, entitySchemaId]);
 
+    try {
+      setLoading(true);
+      setError(null);
+
+      const chunks: string[][] = [];
+      for (let i = 0; i < entityIds.length; i += 100) {
+        chunks.push(entityIds.slice(i, i + 100));
+      }
+
+      const allResults: ValidationResult[] = [];
+      for (const chunk of chunks) {
+        const ids = chunk.join(",");
+        const url = `https://entityvalidator-backend.toolforge.org/api/v1/validate?eid=${entitySchemaId}&entity_ids=${ids}`;
+        const response = await axios.get(url);
+        allResults.push(...response.data.results);
+      }
+
+      setResults(allResults);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.message);
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Validation failed");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [entityIds, entitySchemaId]);
+
+  // clear "required ID" error if schemaId is later filled in
   useEffect(() => {
-    if (autoValidate) {
+    if (entitySchemaId && error === "EntitySchema ID is required") {
+      setError(null);
+    }
+  }, [entitySchemaId, error]);
+
+  // auto-validate when schema or entity list changes
+  useEffect(() => {
+    if (autoValidate && entitySchemaId && entityIds.length > 0) {
       validateEntities();
     }
   }, [autoValidate, entityIds, entitySchemaId, validateEntities]);
@@ -94,7 +110,6 @@ const validateEntities = useCallback(async () => {
           const value = res[key];
           if (Array.isArray(value) && value.length > 0) {
             return value.map((item, idx) => {
-              // Construct link if the item looks like a Wikidata property (e.g., P1427)
               const isProperty = /^P\d+$/.test(item);
               const url = isProperty
                 ? `https://www.wikidata.org/wiki/${res.entity}#${item}`
@@ -123,13 +138,14 @@ const validateEntities = useCallback(async () => {
   return (
     <div className="mt-4">
       <h4>Entity Validation</h4>
-      <button
-        className="btn btn-secondary mb-3"
-        onClick={validateEntities}
-        disabled={loading}
-      >
-        {loading ? "Validating..." : "Validate Entities"}
+      {entityIds.length > 0 && (
+        <button
+          className="btn btn-primary mb-3"
+          onClick={validateEntities}
+          disabled={loading || !/^E\d+$/.test(entitySchemaId)}
+        >{loading ? "Validating..." : "Validate"}
       </button>
+      )}
 
       {error && <div className="alert alert-danger">{error}</div>}
 

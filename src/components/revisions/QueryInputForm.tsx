@@ -26,10 +26,11 @@ export default function QueryInputForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (
-    field: keyof QueryFormValues,
+    field: string | number | symbol,
     value: string | boolean
   ) => {
-    setValues((prev) => ({ ...prev, [field]: value }));
+    // Cast field back to keyof QueryFormValues for type safety
+    setValues((prev) => ({ ...prev, [field as keyof QueryFormValues]: value }));
   };
 
   const validate = (): boolean => {
@@ -41,8 +42,9 @@ export default function QueryInputForm({
       newErrors.sparqlQuery = "Query must return ?entity, ?item or ?lexeme.";
     }
 
-    if (!values.entitySchemaId.trim()) {
-      newErrors.entitySchemaId = "EntitySchema ID is required.";
+    if (values.entitySchemaId && !/^E\d+$/.test(values.entitySchemaId)) {
+      newErrors.entitySchemaId =
+        'Invalid EntitySchema ID. Must be "E" followed by numbers, e.g., E123';
     }
 
     const dateRegex = /^\d{8}$/;

@@ -36,7 +36,7 @@ export default function ResultsTable({ results }: Props) {
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Entity ID</th> {/* Changed header */}
+            <th>Entity ID</th>
             <th>Earliest rev</th>
             <th>Latest rev</th>
             <th>Users</th>
@@ -50,8 +50,7 @@ export default function ResultsTable({ results }: Props) {
                   href={`https://www.wikidata.org/entity/${rev.entity_id}`}
                   target="_blank"
                   // rel="noopener noreferrer"
-                >
-                  {rev.entity_id}
+                >{rev.entity_id}
                 </a>
               </td>
               <td>{rev.earliest.rev_timestamp}</td>
