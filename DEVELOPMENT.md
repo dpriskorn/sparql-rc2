@@ -37,7 +37,6 @@ The user story map roughly is:
 The code is split in these directories
 ```
 src/
-├── assets
 ├── components
 ├── layout
 ├── models
@@ -51,11 +50,18 @@ At the time of writing we have the following components:
 ```
 src/components
 ├── src/components/apiClient.tsx
-├── src/components/EntityValidator.tsx
-├── src/components/QueryInputForm.tsx
-├── src/components/ResultsTable.tsx
-├── src/components/useFetchRevisions.tsx
-└── src/components/WDQS.tsx
+├── src/components/revisions
+│   ├── src/components/revisions/NoticeLink.tsx
+│   ├── src/components/revisions/QueryInputFields.tsx
+│   ├── src/components/revisions/QueryInputForm.tsx
+│   ├── src/components/revisions/ResultLinks.tsx
+│   ├── src/components/revisions/ResultsTable.tsx
+│   └── src/components/revisions/useFetchRevisions.tsx
+└── src/components/validation
+    ├── src/components/validation/EntityValidator.tsx
+    ├── src/components/validation/QueryInputFields.tsx
+    ├── src/components/validation/QueryInputForm.tsx
+    └── src/components/validation/ValidateLink.tsx
 ```
 
 Hopefully the names of the files gives you an idea about the logic that each of them contain
@@ -64,13 +70,15 @@ Hopefully the names of the files gives you an idea about the logic that each of 
 ```
 src/layout
 └── src/layout/Navbar.tsx
+└── src/layout/Footer.tsx
 ```
 
 #### models
 This directory is for typescript OOP classes that are used in the react components
 ```
 src/models
-└── src/models/Entity.tsx
+├── src/models/Entity.tsx
+└── src/models/WDQS.tsx
 ```
 
 #### pages
@@ -78,7 +86,8 @@ Currently we have 2 pages
 ```
 src/pages
 ├── src/pages/CoMaintainer.tsx
-└── src/pages/RevisionsTool.tsx
+├── src/pages/RevisionsTool.tsx
+└── src/pages/Validate.tsx
 ```
 
 ### Local development 
