@@ -9,6 +9,7 @@ import ResultsTable from "../components/revisions/ResultsTable";
 import NavbarComponent from "../layout/Navbar";
 import ResultsCopyLinks from "../components/revisions/ResultLinks";
 import { decodeBase64, encodeBase64 } from "../utils/base64";
+import NoticeLink from "../components/revisions/NoticeLink";
 
 export default function RevisionsTool() {
   const [results, setResults] = useState<Revisions[]>([]);
@@ -93,10 +94,9 @@ export default function RevisionsTool() {
     <>
       <NavbarComponent />
       <div className="container mt-4">
+        <NoticeLink />
         <p>
-          <b>
-            Find recently changed entities
-          </b>
+          <b>Find recently changed entities</b>
         </p>
 
         <QueryInputForm
