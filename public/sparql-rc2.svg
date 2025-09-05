@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Wikidata-style bars -->
+  <rect x="12" y="14" width="4" height="36" fill="#990000"/>
+  <rect x="20" y="14" width="4" height="36" fill="#339966"/>
+  <rect x="28" y="14" width="4" height="36" fill="#006699"/>
+  <rect x="36" y="14" width="4" height="36" fill="#339966"/>
+  <rect x="44" y="14" width="4" height="36" fill="#990000"/>
+
+  <!-- Refresh / recent changes arrow with white padding -->
+  <!-- White "halo" -->
+  <path d="M32 22a10 10 0 1 1-7.07 2.93" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <polyline points="22,22 26,22 26,26" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Actual arrow -->
+  <path d="M32 22a10 10 0 1 1-7.07 2.93" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+  <polyline points="22,22 26,22 26,26" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
